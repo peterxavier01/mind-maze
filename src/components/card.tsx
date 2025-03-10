@@ -10,7 +10,7 @@ interface CardProps {
   setCards: React.Dispatch<React.SetStateAction<CardType[]>>;
 }
 
-const cardSize = "w-[80px] h-[80px] md:w-[120px] md:h-[160px]";
+const cardSize = "w-[80px] h-[80px] md:w-[120px] md:h-[140px]";
 
 const Card = ({ card, setCards }: CardProps) => {
   const consecutiveMatches = useGameStore((state) => state.consecutiveMatches);
