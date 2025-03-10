@@ -35,7 +35,5 @@ export function useGoToNextLevel() {
     setGameScore(0); // Reset game score
 
     onClose(); // close modal
-
-    console.log(`Advanced to level: ${nextLevel.name}`);
   }, [currentLevelId, setLevel, onClose, setGameStatus, setGameScore]);
 }
