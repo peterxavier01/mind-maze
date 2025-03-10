@@ -36,6 +36,7 @@ interface GameStore {
   levelStats: LevelStat;
   setLevelStats: (newStats: Partial<LevelStat>) => void;
   setGameScore: (score: number) => void;
+  setPlayerRating: (rating: number) => void;
   setNumberOfGamesPlayed: (update: number | ((prev: number) => number)) => void;
   setIsGameRunning: (isRunning: boolean) => void;
   setGameStatus: (status: "paused" | "running" | "pending" | "ended") => void;
@@ -94,6 +95,7 @@ const useGameStore = create<GameStore>()(
               : gamesPlayed,
         })),
       setGameScore: (score) => set({ gameScore: score }),
+      setPlayerRating: (rating) => set({ playerRating: rating }),
       setIsGameRunning: (isRunning) => set({ isGameRunning: isRunning }),
       setGameStatus: (status) => set({ status }),
       toggleGameStatus: () =>
