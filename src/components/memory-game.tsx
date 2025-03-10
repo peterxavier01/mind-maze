@@ -8,12 +8,13 @@ import Controls from "./controls";
 import useGameStore from "@/store/use-game-store";
 import useCompletionModal from "@/store/use-completion-modal";
 
-import { shuffleArray } from "../lib/utils";
+import { cn, gameLevels, shuffleArray } from "../lib/utils";
 
 import { Card as CardType } from "../types";
 
 import { gameWon } from "@/lib/sounds";
 import { useLevelTimer } from "@/hooks/use-level-timer";
+import { useCurrentLevelId } from "@/hooks/use-current-level-id";
 
 interface MemoryGameProps {
   images: string[];
@@ -21,6 +22,7 @@ interface MemoryGameProps {
 
 const MemoryGame = ({ images }: MemoryGameProps) => {
   const status = useGameStore((state) => state.status);
+  const gameScore = useGameStore((state) => state.gameScore);
   const setGameStatus = useGameStore((state) => state.setGameStatus);
   const setNumberOfMatches = useGameStore((state) => state.setNumberOfMatches);
   const numberOfGamesPlayed = useGameStore(
@@ -31,11 +33,21 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
   );
   const setLevelCompleted = useGameStore((state) => state.setLevelCompleted);
   const setLevelStats = useGameStore((state) => state.setLevelStats);
+  const setGameScore = useGameStore((state) => state.setGameScore);
+  const setTimeTaken = useGameStore((state) => state.setTimeTaken);
+  const setPlayerRating = useGameStore((state) => state.setPlayerRating);
   const calculateGameScore = useGameStore((state) => state.calculateGameScore);
 
   const onOpen = useCompletionModal((state) => state.onOpen);
 
+  // Get previous rating from localStorage
+  const store = localStorage.getItem("game-store");
+  const parsedStore = store ? JSON.parse(store) : null;
+  const newRating = parsedStore.state.playerRating || 0;
+
   const levelTimer = useLevelTimer();
+  const currentLevelId = useCurrentLevelId();
+  const selectedLevel = gameLevels.find((level) => level.id === currentLevelId);
 
   const [cards, setCards] = useState<CardType[]>(() => {
     const duplicatedImages = [...images, ...images];
@@ -48,6 +60,24 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
       isMatched: false,
     }));
   });
+
+  // Reset game level
+  const resetGameLevel = () => {
+    setCards((prevCards) => {
+      return prevCards.map((card) => ({
+        ...card,
+        isFlipped: false,
+        isMatched: false,
+      }));
+    });
+
+    setLevelStats({ isCompleted: false, bestTime: 0 }); // Reset game completion state
+    setGameStatus("pending"); // Reset game status
+    setPlayerRating(newRating - gameScore); // Reset player rating to previous rating
+    setGameScore(0); // Reset game score
+    setTimeTaken(0); // Reset time taken
+    setNumberOfGamesPlayed((prev) => prev - 1); // Revert total game played to previous value
+  };
 
   useEffect(() => {
     if (status === "ended") {
@@ -97,7 +127,14 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
         />
         <ScoreBoard />
       </div>
-      <div className="grid grid-cols-4 gap-2 md:gap-4">
+      <div
+        className={cn(
+          "grid gap-2 md:gap-4",
+          selectedLevel && selectedLevel.cardTypes <= 8
+            ? "grid-cols-4"
+            : "grid-cols-4 md:grid-cols-6"
+        )}
+      >
         {cards.map((card) => (
           <Card key={card.id} card={card} setCards={setCards} />
         ))}
@@ -105,7 +142,7 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
       <p className="text-center mt-4">
         Games played: <span className="font-bold">{numberOfGamesPlayed}</span>
       </p>
-      <Controls />
+      <Controls resetLevel={resetGameLevel} />
     </div>
   );
 };
