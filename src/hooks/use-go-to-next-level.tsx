@@ -18,7 +18,6 @@ export function useGoToNextLevel() {
 
     // Check if already at the last level
     if (currentLevelId >= lastLevelId) {
-      console.log("Already at the last level. Disabling Next button.");
       return;
     }
 
