@@ -2,6 +2,14 @@
 
 @plugin "tailwindcss-animate";
 
+/* Custom xs breakpoint utilities for mobile */
+@media (min-width: 480px) {
+  .xs\:inline { display: inline; }
+  .xs\:hidden { display: none; }
+  .xs\:block { display: block; }
+  .xs\:flex { display: flex; }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -142,4 +150,18 @@
 @utility font-outfit {
   font-family: "Outfit", serif;
   font-optical-sizing: auto;
+}
+
+@utility app-gradient {
+  background: radial-gradient(
+      circle at 50% 50%,
+      rgba(59, 130, 246, 0.1),
+      transparent 50%
+    ),
+    linear-gradient(
+      to right,
+      rgba(20, 83, 45, 0.2),
+      transparent,
+      rgba(88, 28, 135, 0.2)
+    );
 }
