@@ -10,8 +10,6 @@ interface CardProps {
   setCards: React.Dispatch<React.SetStateAction<CardType[]>>;
 }
 
-const cardSize = "w-[80px] h-[80px] md:w-[120px] md:h-[140px]";
-
 const Card = ({ card, setCards }: CardProps) => {
   const consecutiveMatches = useGameStore((state) => state.consecutiveMatches);
   const incorrectMatches = useGameStore((state) => state.incorrectMatches);
@@ -21,7 +19,19 @@ const Card = ({ card, setCards }: CardProps) => {
   );
   const setIncorrectMatches = useGameStore(
     (state) => state.setIncorrectMatches
-  );
+  );  // Dynamic card sizing based on level and screen size
+  const getCardSize = () => {
+    if (currentLevelId <= 2) {
+      // Beginner (id: 1) and Easy (id: 2) - Same size, nice and large
+      return "w-24 h-28 sm:w-28 sm:h-32 md:w-32 md:h-36";
+    } else if (currentLevelId <= 4) {
+      // Medium (id: 3) and Hard (id: 4) - Medium size
+      return "w-20 h-24 sm:w-24 sm:h-28 md:w-28 md:h-32";
+    } else {
+      // Expert (id: 5) - Smaller but still reasonably sized
+      return "w-18 h-22 sm:w-20 sm:h-24 md:w-24 md:h-28";
+    }
+  };
 
   const cardCover =
     currentLevelId !== 5 ? "/card-cover-1.png" : "/card-cover-2.png";
@@ -87,13 +97,12 @@ const Card = ({ card, setCards }: CardProps) => {
       key={card.id}
       className="relative"
       onClick={() => handleCardSelect(card)}
-    >
-      <img
+    >      <img
         src={cardCover}
         alt="card-cover"
         className={cn(
-          cardSize,
-          "absolute inset-0 max-w-full max-h-full rounded-md shadow-lg transform transition-transform duration-300 ease-in-out"
+          getCardSize(),
+          "absolute inset-0 max-w-full max-h-full rounded-lg shadow-xl border border-slate-600/30 transform transition-transform duration-300 ease-in-out hover:shadow-2xl"
         )}
         style={{
           backfaceVisibility: "hidden",
@@ -103,13 +112,12 @@ const Card = ({ card, setCards }: CardProps) => {
               ? "rotateY(180deg)"
               : "rotateY(0deg)",
         }}
-      />
-      <img
+      />      <img
         src={card.imageUrl}
         alt="card"
         className={cn(
-          cardSize,
-          "block max-w-full max-h-full bg-gray-200 p-4 rounded-md shadow-lg transform transition-transform duration-300 ease-in-out"
+          getCardSize(),
+          "block max-w-full max-h-full bg-slate-700/50 backdrop-blur-sm border border-slate-600/40 p-4 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out hover:bg-slate-600/50"
         )}
         style={{
           backfaceVisibility: "hidden",
