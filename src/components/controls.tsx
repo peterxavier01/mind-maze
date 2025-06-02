@@ -19,13 +19,12 @@ const Controls = ({ resetLevel }: { resetLevel: () => void }) => {
     setCurrentPage("home");
   };
   
-  return (
-    <div className="flex items-center justify-between mt-4 sm:mt-6 flex-wrap gap-2 sm:gap-3 p-3 sm:p-4 bg-slate-800/30 backdrop-blur-sm border border-slate-600/20 rounded-xl">
+  return (    <div className="flex items-center justify-between mt-4 sm:mt-6 flex-wrap gap-2 sm:gap-3 p-3 sm:p-4 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm border border-slate-300/40 dark:border-slate-600/20 rounded-xl">
       <div className="flex items-center gap-1.5 sm:gap-2">
         <Button
           variant="outline"
           size="sm"
-          className="cursor-pointer bg-slate-700/50 border-slate-600/40 text-slate-200 hover:bg-slate-600/60 hover:text-white text-xs sm:text-sm px-2 sm:px-3"
+          className="cursor-pointer bg-slate-200/70 dark:bg-slate-700/50 border-slate-300/60 dark:border-slate-600/40 text-slate-800 dark:text-slate-200 hover:bg-slate-300/70 dark:hover:bg-slate-600/60 hover:text-slate-900 dark:hover:text-white text-xs sm:text-sm px-2 sm:px-3"
           onClick={handleGoHome}
         >
           <Home className="size-3 sm:size-4" />

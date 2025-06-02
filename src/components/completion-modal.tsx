@@ -32,14 +32,13 @@ const CompletionModal = () => {
     setCurrentPage("home");
     onClose();
   };
-  return (
-    <Modal
+  return (    <Modal
       title="Good Game!"
       isOpen={isOpen}
       onChange={onChange}
-      className="w-full max-w-xl mx-auto bg-slate-800/95 backdrop-blur-lg border border-slate-600/40"
+      className="w-full max-w-xl mx-auto bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border border-slate-300/60 dark:border-slate-600/40"
     >
-      <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6">
+      <div className="bg-gradient-to-br from-slate-100/50 to-slate-200/50 dark:from-slate-800/50 dark:to-slate-900/50 rounded-xl p-6">
         <img
           src="/trophy.svg"
           alt="trophy"
@@ -47,16 +46,16 @@ const CompletionModal = () => {
         />
 
         <div className="flex flex-col items-center gap-4 mt-6">
-          <div className="flex items-center gap-3 bg-slate-700/50 backdrop-blur-sm border border-slate-600/30 rounded-lg p-4 shadow-xl">
+          <div className="flex items-center gap-3 bg-white/70 dark:bg-slate-700/50 backdrop-blur-sm border border-slate-300/50 dark:border-slate-600/30 rounded-lg p-4 shadow-xl">
             <span className="font-bold text-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black px-4 py-2 rounded-lg shadow-lg">
               +{gameScore}
             </span>
-            <span className="text-slate-200 font-medium">points</span>
+            <span className="text-slate-800 dark:text-slate-200 font-medium">points</span>
           </div>
 
-          <div className="bg-slate-700/30 backdrop-blur-sm border border-slate-600/20 rounded-lg px-6 py-3">
-            <p className="text-slate-300">
-              Best: <span className="font-bold text-xl text-teal-400">{highScore}</span> <span className="text-slate-400">points</span>
+          <div className="bg-slate-200/50 dark:bg-slate-700/30 backdrop-blur-sm border border-slate-300/40 dark:border-slate-600/20 rounded-lg px-6 py-3">
+            <p className="text-slate-700 dark:text-slate-300">
+              Best: <span className="font-bold text-xl text-teal-600 dark:text-teal-400">{highScore}</span> <span className="text-slate-600 dark:text-slate-400">points</span>
             </p>
           </div>
         </div>
@@ -65,14 +64,14 @@ const CompletionModal = () => {
           <Button 
             variant="outline"
             onClick={handleGoHome} 
-            className="cursor-pointer bg-slate-700/50 border-slate-600/40 text-slate-200 hover:bg-slate-600/60 hover:text-white"
+            className="cursor-pointer bg-slate-200/70 dark:bg-slate-700/50 border-slate-300/60 dark:border-slate-600/40 text-slate-800 dark:text-slate-200 hover:bg-slate-300/70 dark:hover:bg-slate-600/60 hover:text-slate-900 dark:hover:text-white"
           >
             <Home className="size-4" />
             Home
           </Button>
           <Button 
             onClick={onClose} 
-            className="cursor-pointer bg-slate-600 hover:bg-slate-700 text-white border-0 shadow-lg"
+            className="cursor-pointer bg-slate-400 dark:bg-slate-600 hover:bg-slate-500 dark:hover:bg-slate-700 text-white border-0 shadow-lg"
           >
             <X className="size-4" />
             Close

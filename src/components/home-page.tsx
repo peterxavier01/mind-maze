@@ -31,29 +31,29 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
         variants={floatingVariants}
         initial="initial"
         animate="animate"
-        className="absolute top-8 sm:top-10 left-4 sm:left-10 opacity-30"
+        className="absolute top-8 sm:top-10 left-4 sm:left-10 opacity-20 dark:opacity-30"
       >
-        <Brain className="size-10 sm:size-12 md:size-16 text-teal-400 drop-shadow-lg" />
+        <Brain className="size-10 sm:size-12 md:size-16 text-teal-600 dark:text-teal-400 drop-shadow-lg" />
       </motion.div>
 
       <motion.div
         variants={floatingVariants}
         initial="initial"
         animate="animate"
-        className="absolute top-16 sm:top-20 right-6 sm:right-16 opacity-25"
+        className="absolute top-16 sm:top-20 right-6 sm:right-16 opacity-15 dark:opacity-25"
         style={{ animationDelay: "2s" }}
       >
-        <Target className="size-8 sm:size-10 md:size-12 text-indigo-400 drop-shadow-lg" />
+        <Target className="size-8 sm:size-10 md:size-12 text-indigo-600 dark:text-indigo-400 drop-shadow-lg" />
       </motion.div>
 
       <motion.div
         variants={floatingVariants}
         initial="initial"
         animate="animate"
-        className="absolute bottom-16 sm:bottom-20 left-6 sm:left-20 opacity-25"
+        className="absolute bottom-16 sm:bottom-20 left-6 sm:left-20 opacity-15 dark:opacity-25"
         style={{ animationDelay: "4s" }}
       >
-        <Star className="size-10 sm:size-12 md:size-14 text-amber-400 drop-shadow-lg" />
+        <Star className="size-10 sm:size-12 md:size-14 text-amber-600 dark:text-amber-400 drop-shadow-lg" />
       </motion.div>
 
       {/* Header with theme toggle */}
@@ -75,9 +75,10 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
       >
         {/* Title and subtitle */}
         <motion.div variants={heroVariants} className="space-y-3 sm:space-y-4">
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold bg-gradient-to-r from-teal-400 via-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-2xl">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold bg-gradient-to-r from-teal-500 via-blue-500 to-purple-600 dark:from-teal-400 dark:via-blue-400 dark:to-purple-500 bg-clip-text text-transparent drop-shadow-2xl">
             Mind Maze
-          </h1>          <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
+          </h1>
+          <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
             Challenge your memory and sharpen your mind in this exciting card
             matching adventure
           </p>
@@ -95,10 +96,11 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
                 variants={cardVariants}
                 whileHover="hover"
                 className="relative"
-              >                <img
+              >
+                <img
                   src={card}
                   alt="preview card"
-                  className="w-12 h-16 sm:w-16 sm:h-20 md:w-20 md:h-24 rounded-lg shadow-2xl bg-slate-700/50 backdrop-blur-sm border border-slate-600/50 p-1.5 sm:p-2 hover:bg-slate-600/50 transition-all duration-300"
+                  className="w-12 h-16 sm:w-16 sm:h-20 md:w-20 md:h-24 rounded-lg shadow-2xl bg-white/80 dark:bg-slate-700/50 backdrop-blur-sm border border-slate-300/70 dark:border-slate-600/50 p-1.5 sm:p-2 hover:bg-slate-50 dark:hover:bg-slate-600/50 transition-all duration-300"
                 />
               </motion.div>
             )
@@ -106,10 +108,10 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
         </motion.div>
         {/* Current level display */}
         <motion.div variants={itemVariants} className="space-y-2">
-          <p className="text-lg text-slate-400">Current Level</p>
-          <div className="inline-flex items-center gap-2 bg-slate-800/60 backdrop-blur-sm border border-slate-600/50 px-4 py-2 rounded-full shadow-lg">
-            <Target className="size-5 text-teal-400" />
-            <span className="font-semibold text-lg text-slate-200">
+          <p className="text-lg text-slate-600 dark:text-slate-400">Current Level</p>
+          <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-slate-300/70 dark:border-slate-600/50 px-4 py-2 rounded-full shadow-lg">
+            <Target className="size-5 text-teal-600 dark:text-teal-400" />
+            <span className="font-semibold text-lg text-slate-800 dark:text-slate-200">
               {currentLevel?.name} ({currentLevel?.cardTypes} pairs)
             </span>
           </div>
@@ -124,11 +126,11 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
               key={stat.id}
               variants={statsVariants}
               whileHover="hover"
-              className="bg-slate-800/40 backdrop-blur-sm border border-slate-600/30 rounded-xl p-6 text-center space-y-2 shadow-xl hover:bg-slate-700/40 transition-all duration-300"
+              className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-sm border border-slate-300/50 dark:border-slate-600/30 rounded-xl p-6 text-center space-y-2 shadow-xl hover:bg-white/80 dark:hover:bg-slate-700/40 transition-all duration-300"
             >
               <stat.icon className={cn("size-8 mx-auto", stat.color)} />
-              <p className="text-2xl font-bold text-slate-100">{stat.stat}</p>
-              <p className="text-sm text-slate-400">{stat.title}</p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stat.stat}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">{stat.title}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -147,17 +149,17 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
                 className={cn(
                   "w-12 h-12 rounded-full flex items-center justify-center mx-auto backdrop-blur-sm border shadow-lg",
                   index === 0
-                    ? "bg-purple-500/20 border-purple-400/30"
+                    ? "bg-purple-200/60 dark:bg-purple-500/20 border-purple-400/50 dark:border-purple-400/30"
                     : index === 1
-                    ? "bg-teal-500/20 border-teal-400/30"
+                    ? "bg-teal-200/60 dark:bg-teal-500/20 border-teal-400/50 dark:border-teal-400/30"
                     : index === 2
-                    ? "bg-emerald-500/20 border-emerald-400/30"
-                    : "bg-amber-500/20 border-amber-400/30"
+                    ? "bg-emerald-200/60 dark:bg-emerald-500/20 border-emerald-400/50 dark:border-emerald-400/30"
+                    : "bg-amber-200/60 dark:bg-amber-500/20 border-amber-400/50 dark:border-amber-400/30"
                 )}
               >
                 <feature.icon className={cn("size-6", feature.color)} />
               </div>
-              <p className="text-sm font-medium text-slate-300">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {feature.title}
               </p>
             </motion.div>
@@ -186,7 +188,7 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
         </motion.div>
         {/* Game tip */}
         <motion.div variants={itemVariants} className="text-center">
-          <p className="text-sm text-slate-400 italic">
+          <p className="text-sm text-slate-600 dark:text-slate-400 italic">
             💡 Tip: Match pairs of cards before time runs out to score points!
           </p>
         </motion.div>

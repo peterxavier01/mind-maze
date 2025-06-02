@@ -122,10 +122,9 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
     setNumberOfMatches(matchedPairs); // Update Zustand store
   }, [cards, setNumberOfMatches]);
 
-  return (
-    <div className="w-full px-2 sm:px-4">
+  return (    <div className="w-full px-2 sm:px-4">
       {" "}
-      <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6 p-2 sm:p-3 md:p-4 bg-slate-800/40 backdrop-blur-sm border border-slate-600/30 rounded-xl shadow-xl">
+      <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6 p-2 sm:p-3 md:p-4 bg-white/80 dark:bg-slate-800/40 backdrop-blur-sm border border-slate-300/30 dark:border-slate-600/30 rounded-xl shadow-xl">
         {/** Set game status to 'ended' when timer runs out **/}
         <Timer
           timeInSeconds={levelTimer}
@@ -147,10 +146,9 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
           <ScoreBoard />
         </div>
       </div>
-      <div className="flex justify-center">
-        <div
+      <div className="flex justify-center">        <div
           className={cn(
-            "grid gap-2 md:gap-3 p-4 md:p-6 bg-slate-800/20 backdrop-blur-sm border border-slate-600/20 rounded-xl w-fit mx-auto",
+            "grid gap-2 md:gap-3 p-4 md:p-6 bg-white/60 dark:bg-slate-800/20 backdrop-blur-sm border border-slate-300/20 dark:border-slate-600/20 rounded-xl w-fit mx-auto",
             selectedLevel && selectedLevel.cardTypes <= 2
               ? "grid-cols-2 max-w-xs"
               : selectedLevel && selectedLevel.cardTypes <= 4
@@ -164,10 +162,9 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
             <Card key={card.id} card={card} setCards={setCards} />
           ))}
         </div>
-      </div>
-      <p className="text-center mt-3 sm:mt-4 md:mt-6 text-slate-300 text-xs sm:text-sm md:text-base px-2 sm:px-4">
+      </div>      <p className="text-center mt-3 sm:mt-4 md:mt-6 text-slate-600 dark:text-slate-300 text-xs sm:text-sm md:text-base px-2 sm:px-4">
         Games played:{" "}
-        <span className="font-bold text-teal-400">{numberOfGamesPlayed}</span>
+        <span className="font-bold text-teal-600 dark:text-teal-400">{numberOfGamesPlayed}</span>
       </p>
       <Controls resetLevel={resetGameLevel} />
     </div>

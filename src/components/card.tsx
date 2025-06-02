@@ -102,7 +102,7 @@ const Card = ({ card, setCards }: CardProps) => {
         alt="card-cover"
         className={cn(
           getCardSize(),
-          "absolute inset-0 max-w-full max-h-full rounded-lg shadow-xl border border-slate-600/30 transform transition-transform duration-300 ease-in-out hover:shadow-2xl"
+          "absolute inset-0 max-w-full max-h-full rounded-lg shadow-xl border border-slate-300/50 dark:border-slate-600/30 transform transition-transform duration-300 ease-in-out hover:shadow-2xl"
         )}
         style={{
           backfaceVisibility: "hidden",
@@ -117,7 +117,7 @@ const Card = ({ card, setCards }: CardProps) => {
         alt="card"
         className={cn(
           getCardSize(),
-          "block max-w-full max-h-full bg-slate-700/50 backdrop-blur-sm border border-slate-600/40 p-4 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out hover:bg-slate-600/50"
+          "block max-w-full max-h-full bg-white/80 dark:bg-slate-700/50 backdrop-blur-sm border border-slate-300/60 dark:border-slate-600/40 p-4 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out hover:bg-slate-50 dark:hover:bg-slate-600/50"
         )}
         style={{
           backfaceVisibility: "hidden",

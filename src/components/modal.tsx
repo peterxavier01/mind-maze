@@ -28,17 +28,17 @@ const Modal = ({
   return (
     <Dialog open={isOpen} defaultOpen={isOpen} onOpenChange={onChange}>      <DialogContent
         className={cn(
-          "overflow-y-auto max-h-[90vh] my-auto font-questrial bg-slate-800/95 backdrop-blur-lg border border-slate-600/40 shadow-2xl",
+          "overflow-y-auto max-h-[90vh] my-auto font-questrial bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border border-slate-300/60 dark:border-slate-600/40 shadow-2xl",
           className
         )}
       >
         <DialogHeader>
-          <DialogTitle className="text-xl md:text-4xl text-center font-inter font-bold capitalize text-slate-100">
+          <DialogTitle className="text-xl md:text-4xl text-center font-inter font-bold capitalize text-slate-900 dark:text-slate-100">
             {title}
           </DialogTitle>
           <DialogDescription
             className={cn(
-              "font-inter font-medium text-slate-300",
+              "font-inter font-medium text-slate-700 dark:text-slate-300",
               !description && "hidden sr-only"
             )}
           >

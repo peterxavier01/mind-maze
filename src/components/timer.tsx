@@ -52,11 +52,10 @@ const Timer = ({ timeInSeconds, onComplete }: TimerProps) => {
 
       setTimeTaken(timeTaken);
     }
-  }, [gameStatus, secondsLeft, setTimeTaken]);
-  return (
-    <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-700/50 backdrop-blur-sm border border-slate-600/40 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg">
-      <TimerIcon className="size-4 sm:size-5 text-teal-400" />
-      <p className="font-medium text-sm sm:text-base md:text-lg text-slate-200">
+  }, [gameStatus, secondsLeft, setTimeTaken]);  return (
+    <div className="flex items-center gap-1.5 sm:gap-2 bg-white/70 dark:bg-slate-700/50 backdrop-blur-sm border border-slate-300/60 dark:border-slate-600/40 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg">
+      <TimerIcon className="size-4 sm:size-5 text-teal-600 dark:text-teal-400" />
+      <p className="font-medium text-sm sm:text-base md:text-lg text-slate-800 dark:text-slate-200">
         {formatTime(secondsLeft)}
       </p>
     </div>

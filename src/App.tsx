@@ -23,7 +23,7 @@ function App() {
   };
 
   return (
-    <div className="overflow-x-hidden app-gradient">
+    <div className="overflow-x-hidden dark:app-gradient app-gradient-light">
       <AnimatePresence mode="wait">
         {currentPage === "home" ? (
           <motion.div
