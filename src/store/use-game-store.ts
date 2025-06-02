@@ -24,6 +24,7 @@ interface GameStore {
   gameScore: number;
   highScore: number;
   playerRating: number;
+  preGameRating: number; // Track rating before game starts
   numberOfGamesPlayed: number;
   numberOfMatches: number;
   timeTaken: number;
@@ -31,8 +32,10 @@ interface GameStore {
   incorrectMatches: number;
   levelCompleted: boolean;
   currentLevelId: number;
+  currentPage: "home" | "game";
   setCurrentLevelId: (id: number) => void;
   setLevel: (levelId: number) => void; // Synced method for updating both currentId & levelStats
+  setCurrentPage: (page: "home" | "game") => void;
   levelStats: LevelStat;
   setLevelStats: (newStats: Partial<LevelStat>) => void;
   setGameScore: (score: number) => void;
@@ -47,6 +50,8 @@ interface GameStore {
   setIncorrectMatches: (matches: number) => void;
   setLevelCompleted: (completed: boolean) => void;
   calculateGameScore: () => void;
+  resetCurrentLevel: () => void;
+  startNewGame: () => void; // New method to track game start
 }
 
 const useGameStore = create<GameStore>()(
@@ -57,6 +62,7 @@ const useGameStore = create<GameStore>()(
       gameScore: 0,
       highScore: 0,
       playerRating: 0,
+      preGameRating: 0, // Initialize pre-game rating
       numberOfGamesPlayed: 0,
       numberOfMatches: 0,
       consecutiveMatches: 0,
@@ -64,7 +70,9 @@ const useGameStore = create<GameStore>()(
       timeTaken: 0,
       levelCompleted: false,
       currentLevelId: 1,
+      currentPage: "home",
       setCurrentLevelId: (id) => set({ currentLevelId: id }),
+      setCurrentPage: (page) => set({ currentPage: page }),
       levelStats: { currentLevel: "Beginner", bestTime: 0, isCompleted: false },
 
       setLevel: (levelId) => {
@@ -108,15 +116,23 @@ const useGameStore = create<GameStore>()(
       setConsecutiveMatches: (matches) => set({ consecutiveMatches: matches }),
       setIncorrectMatches: (matches) => set({ incorrectMatches: matches }),
       setLevelCompleted: (completed) => set({ levelCompleted: completed }),
-
       calculateGameScore: () =>
         set((state) => {
           let score =
             state.numberOfMatches * BASIC_SCORING_POINTS - // Basic scoring: points per correct match
             state.incorrectMatches * PENALTIES_POINTS; // Deduct points for incorrect matches
 
-          // Time bonus: reward for making quick matches
-          if (state.timeTaken <= 20) score += TIME_BONUS_POINTS;
+          // Dynamic time bonus based on level difficulty
+          const currentLevel = gameLevels.find(
+            (level) => level.id === state.currentLevelId
+          );
+          if (currentLevel) {
+            // Award time bonus if completed in less than 50% of allocated time
+            const timeThreshold = Math.floor(currentLevel.timeLimit * 0.5);
+            if (state.timeTaken <= timeThreshold) {
+              score += TIME_BONUS_POINTS;
+            }
+          }
 
           // Streak bonus: extra points for consecutive matches
           score += state.consecutiveMatches * STREAK_BONUS_POINTS;
@@ -129,7 +145,6 @@ const useGameStore = create<GameStore>()(
           const parsedStore = store ? JSON.parse(store) : null;
           const previousRating = parsedStore.state.playerRating || 0;
           const previousTime = parsedStore?.state?.timeTaken || Infinity;
-
           return {
             gameScore: score,
             highScore: Math.max(state.highScore, score), // Automatically update high score if beaten
@@ -140,6 +155,30 @@ const useGameStore = create<GameStore>()(
             },
           };
         }),
+      resetCurrentLevel: () =>
+        set((state) => ({
+          status: "pending",
+          isGameRunning: false,
+          gameScore: 0,
+          numberOfMatches: 0,
+          consecutiveMatches: 0,
+          incorrectMatches: 0,
+          timeTaken: 0,
+          levelCompleted: false,
+          playerRating: state.preGameRating, // Restore pre-game rating
+        })),
+
+      startNewGame: () =>
+        set((state) => ({
+          preGameRating: state.playerRating, // Save current rating before starting
+          status: "pending",
+          gameScore: 0,
+          numberOfMatches: 0,
+          consecutiveMatches: 0,
+          incorrectMatches: 0,
+          timeTaken: 0,
+          levelCompleted: false,
+        })),
     }),
     {
       name: "game-store", // Key for localStorage
