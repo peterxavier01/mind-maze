@@ -15,6 +15,18 @@ const Timer = ({ timeInSeconds, onComplete }: TimerProps) => {
   const gameStatus = useGameStore((state) => state.status);
   const setTimeTaken = useGameStore((state) => state.setTimeTaken);
 
+  // Reset timer when timeInSeconds prop changes OR when game status changes to pending (for Try Again)
+  useEffect(() => {
+    setSecondsLeft(timeInSeconds);
+  }, [timeInSeconds]);
+
+  // Reset timer when game status changes to pending (Try Again clicked)
+  useEffect(() => {
+    if (gameStatus === "pending") {
+      setSecondsLeft(timeInSeconds);
+    }
+  }, [gameStatus, timeInSeconds]);
+
   useEffect(() => {
     if (!isGameRunning || gameStatus === "ended" || gameStatus === "pending")
       return;
@@ -26,12 +38,12 @@ const Timer = ({ timeInSeconds, onComplete }: TimerProps) => {
     return () => clearInterval(interval);
   }, [isGameRunning, gameStatus]);
 
-  // Call onComplete when timer reaches 0
+  // Call onComplete when timer reaches 0 and game is running
   useEffect(() => {
-    if (secondsLeft === 0 && onComplete) {
+    if (secondsLeft === 0 && onComplete && gameStatus === "running") {
       onComplete();
     }
-  }, [secondsLeft, onComplete]);
+  }, [secondsLeft, onComplete, gameStatus]);
 
   useEffect(() => {
     // Calculate time taken for game to end when status = 'ended'
@@ -41,13 +53,12 @@ const Timer = ({ timeInSeconds, onComplete }: TimerProps) => {
       setTimeTaken(timeTaken);
     }
   }, [gameStatus, secondsLeft, setTimeTaken]);
-
   return (
-    <div>
-      <div className="flex items-center gap-1">
-        <TimerIcon className="size-5" />
-        <p className="font-medium text-lg">{formatTime(secondsLeft)}</p>
-      </div>
+    <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-700/50 backdrop-blur-sm border border-slate-600/40 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg">
+      <TimerIcon className="size-4 sm:size-5 text-teal-400" />
+      <p className="font-medium text-sm sm:text-base md:text-lg text-slate-200">
+        {formatTime(secondsLeft)}
+      </p>
     </div>
   );
 };
