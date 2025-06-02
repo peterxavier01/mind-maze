@@ -28,7 +28,7 @@ export const incorrectMatch = new Howl({
   html5: true,
 });
 
-// export const gameOver = new Howl({
-//   src: ["/sounds/game-sound.wav"],
-//   html5: true,
-// });
+export const gameOver = new Howl({
+  src: ["/sounds/game-over.mp3"],
+  html5: true,
+});
