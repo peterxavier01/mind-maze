@@ -38,11 +38,12 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
   const resetCurrentLevel = useGameStore((state) => state.resetCurrentLevel);
   const onOpen = useCompletionModal((state) => state.onOpen);
   const onOpenGameLost = useGameLostModal((state) => state.onOpen);
-
   const levelTimer = useLevelTimer();
   const currentLevelId = useCurrentLevelId();
   const selectedLevel = gameLevels.find((level) => level.id === currentLevelId);
 
+  // Track if the current game session has been counted to prevent double increment
+  const [gameSessionCounted, setGameSessionCounted] = useState(false);
   const [cards, setCards] = useState<CardType[]>(() => {
     const duplicatedImages = [...images, ...images];
     const shuffledImages = shuffleArray(duplicatedImages);
@@ -55,8 +56,15 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
     }));
   });
 
+  // Reset game session counter when images change (new level or component mount)
+  useEffect(() => {
+    setGameSessionCounted(false);
+  }, [images]);
   // Reset game level
   const resetGameLevel = () => {
+    // Reset the game session counter flag for new game
+    setGameSessionCounted(false);
+
     // Use the store's reset function to cleanly reset all game state
     resetCurrentLevel();
 
@@ -71,30 +79,43 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
         isFlipped: false,
         isMatched: false,
       }));
-    });
-
-    // Reset level stats
+    }); // Reset level stats
     setLevelStats({ isCompleted: false });
   };
-
   useEffect(() => {
-    if (status === "ended") {
-      calculateGameScore(); // Calculate game score when game ends
+    if (status === "ended" && !gameSessionCounted) {
+      // Mark this game session as counted to prevent double increment
+      setGameSessionCounted(true);
 
       // Check if all cards are matched (game completed successfully)
       const allCardsMatched = cards.every((card) => card.isMatched);
 
       if (allCardsMatched) {
-        // Game was completed successfully
+        // Set level completed first, then calculate score
+        setLevelCompleted(true);
+        setLevelStats({ isCompleted: true });
+
+        // Show completion modal
         setTimeout(() => {
-          onOpen(); // Show completion modal
+          onOpen();
           gameWon.play();
         }, 1000);
-        setNumberOfGamesPlayed((prev) => prev + 1); // Update player's total number of games played
       }
-      // If not all cards matched, the timer onComplete will handle showing game lost modal
+
+      // Always calculate score and increment games played once per game end
+      calculateGameScore();
+      setNumberOfGamesPlayed((prev) => prev + 1);
     }
-  }, [status, calculateGameScore, onOpen, setNumberOfGamesPlayed, cards]);
+  }, [
+    status,
+    gameSessionCounted,
+    calculateGameScore,
+    onOpen,
+    setNumberOfGamesPlayed,
+    cards,
+    setLevelCompleted,
+    setLevelStats,
+  ]);
 
   // Update game status to 'ended' when all cards have been matched
   useEffect(() => {
@@ -106,13 +127,7 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
       // Toggle game state to 'ended' if all cards are matched
       setGameStatus("ended");
     }
-
-    // Update when player successfully completes a level
-    if (allCardsMatched && status === "ended") {
-      setLevelCompleted(true);
-      setLevelStats({ isCompleted: true });
-    }
-  }, [cards, status, setGameStatus, setLevelCompleted, setLevelStats]);
+  }, [cards, status, setGameStatus]);
 
   // Update the number of matched pairs
   useEffect(() => {
@@ -122,22 +137,25 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
     setNumberOfMatches(matchedPairs); // Update Zustand store
   }, [cards, setNumberOfMatches]);
 
-  return (    <div className="w-full px-2 sm:px-4">
-      {" "}
+  return (
+    <div className="w-full px-2 sm:px-4">
       <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6 p-2 sm:p-3 md:p-4 bg-white/80 dark:bg-slate-800/40 backdrop-blur-sm border border-slate-300/30 dark:border-slate-600/30 rounded-xl shadow-xl">
         {/** Set game status to 'ended' when timer runs out **/}
         <Timer
           timeInSeconds={levelTimer}
           onComplete={() => {
-            setGameStatus("ended");
-            // Check if game was completed vs time ran out
-            const allCardsMatched = cards.every((card) => card.isMatched);
-            if (!allCardsMatched) {
-              // Time ran out without completing the game
-              setTimeout(() => {
-                onOpenGameLost();
-                gameOver.play();
-              }, 1000);
+            // Only handle timer completion if game isn't already ended
+            if (status !== "ended") {
+              setGameStatus("ended");
+              // Check if game was completed vs time ran out
+              const allCardsMatched = cards.every((card) => card.isMatched);
+              if (!allCardsMatched) {
+                // Time ran out without completing the game
+                setTimeout(() => {
+                  onOpenGameLost();
+                  gameOver.play();
+                }, 1000);
+              }
             }
           }}
         />
@@ -146,7 +164,8 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
           <ScoreBoard />
         </div>
       </div>
-      <div className="flex justify-center">        <div
+      <div className="flex justify-center">
+        <div
           className={cn(
             "grid gap-2 md:gap-3 p-4 md:p-6 bg-white/60 dark:bg-slate-800/20 backdrop-blur-sm border border-slate-300/20 dark:border-slate-600/20 rounded-xl w-fit mx-auto",
             selectedLevel && selectedLevel.cardTypes <= 2
@@ -162,9 +181,12 @@ const MemoryGame = ({ images }: MemoryGameProps) => {
             <Card key={card.id} card={card} setCards={setCards} />
           ))}
         </div>
-      </div>      <p className="text-center mt-3 sm:mt-4 md:mt-6 text-slate-600 dark:text-slate-300 text-xs sm:text-sm md:text-base px-2 sm:px-4">
+      </div>
+      <p className="text-center mt-3 sm:mt-4 md:mt-6 text-slate-600 dark:text-slate-300 text-xs sm:text-sm md:text-base px-2 sm:px-4">
         Games played:{" "}
-        <span className="font-bold text-teal-600 dark:text-teal-400">{numberOfGamesPlayed}</span>
+        <span className="font-bold text-teal-600 dark:text-teal-400">
+          {numberOfGamesPlayed}
+        </span>
       </p>
       <Controls resetLevel={resetGameLevel} />
     </div>
