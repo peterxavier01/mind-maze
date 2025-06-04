@@ -25,7 +25,6 @@ export function useGoToNextLevel() {
     const nextLevel = gameLevels.find((level) => level.id === nextLevelId);
 
     if (!nextLevel) {
-      console.error(`Next level (ID: ${nextLevelId}) not found.`);
       return;
     }
 
