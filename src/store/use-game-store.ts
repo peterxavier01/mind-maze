@@ -138,20 +138,19 @@ const useGameStore = create<GameStore>()(
           score += state.consecutiveMatches * STREAK_BONUS_POINTS;
 
           // Level completion bonus
-          if (state.levelCompleted) score += LEVEL_COMPLETION_POINTS;
-
-          // Extract previous playerRating from localStorage
-          const store = localStorage.getItem("game-store");
-          const parsedStore = store ? JSON.parse(store) : null;
-          const previousRating = parsedStore.state.playerRating || 0;
-          const previousTime = parsedStore?.state?.timeTaken || Infinity;
+          if (state.levelCompleted) {
+            score += LEVEL_COMPLETION_POINTS;
+          }
           return {
             gameScore: score,
             highScore: Math.max(state.highScore, score), // Automatically update high score if beaten
-            playerRating: score + previousRating,
+            playerRating: state.preGameRating + score, // Use pre-game rating to prevent double accumulation
             levelStats: {
               ...state.levelStats,
-              bestTime: Math.min(state.timeTaken, previousTime),
+              bestTime:
+                state.levelStats.bestTime === 0
+                  ? state.timeTaken
+                  : Math.min(state.timeTaken, state.levelStats.bestTime),
             },
           };
         }),
@@ -167,11 +166,10 @@ const useGameStore = create<GameStore>()(
           levelCompleted: false,
           playerRating: state.preGameRating, // Restore pre-game rating
         })),
-
       startNewGame: () =>
         set((state) => ({
           preGameRating: state.playerRating, // Save current rating before starting
-          status: "pending",
+          status: "pending" as const,
           gameScore: 0,
           numberOfMatches: 0,
           consecutiveMatches: 0,
