@@ -22,6 +22,9 @@ interface HomePageProps {
 
 const HomePage = ({ onStartGame }: HomePageProps) => {
   const currentLevelId = useGameStore((state) => state.currentLevelId);
+  const numberOfGamesPlayed = useGameStore(
+    (state) => state.numberOfGamesPlayed
+  );
 
   const currentLevel = gameLevels.find((level) => level.id === currentLevelId);
   return (
@@ -108,7 +111,9 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
         </motion.div>
         {/* Current level display */}
         <motion.div variants={itemVariants} className="space-y-2">
-          <p className="text-lg text-slate-600 dark:text-slate-400">Current Level</p>
+          <p className="text-lg text-slate-600 dark:text-slate-400">
+            Current Level
+          </p>
           <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-slate-300/70 dark:border-slate-600/50 px-4 py-2 rounded-full shadow-lg">
             <Target className="size-5 text-teal-600 dark:text-teal-400" />
             <span className="font-semibold text-lg text-slate-800 dark:text-slate-200">
@@ -129,8 +134,12 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
               className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-sm border border-slate-300/50 dark:border-slate-600/30 rounded-xl p-6 text-center space-y-2 shadow-xl hover:bg-white/80 dark:hover:bg-slate-700/40 transition-all duration-300"
             >
               <stat.icon className={cn("size-8 mx-auto", stat.color)} />
-              <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stat.stat}</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">{stat.title}</p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                {stat.stat}
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                {stat.title}
+              </p>
             </motion.div>
           ))}
         </motion.div>
@@ -182,7 +191,7 @@ const HomePage = ({ onStartGame }: HomePageProps) => {
               className="text-xl px-8 py-6 bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 shadow-2xl border-0 text-white font-semibold hover:shadow-teal-500/25 transition-all duration-300"
             >
               <Play className="size-6 mr-2" />
-              Start Playing
+              {numberOfGamesPlayed > 1 ? "Continue Playing" : "Start Playing"}
             </Button>
           </motion.div>
         </motion.div>
